@@ -48,7 +48,7 @@ const DepartmentDetails = () => {
         if (window.confirm("Are you sure you want to delete this department?")) {
             try {
                 console.log("Deleting department with id:", id);
-                await deleteDepartment({id}).unwrap();
+                await deleteDepartment(id).unwrap();
                 navigate("/departments"); // go back to list
             } catch (err) {
                 console.error("Delete failed:", err);

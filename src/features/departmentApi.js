@@ -39,7 +39,7 @@ export const departmentApi = createApi({
             invalidatesTags: ["Department"],
         }),
         deleteDepartment: builder.mutation({
-            query: ({ id }) => ({
+            query: (id) => ({
                 url: `/departments/deleteDepartment/${id}`,
                 method: "DELETE",
             }),
