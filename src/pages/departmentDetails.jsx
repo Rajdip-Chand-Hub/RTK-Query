@@ -11,7 +11,7 @@ const DepartmentDetails = () => {
     const navigate = useNavigate();
 
     // Fetch single department
-    const { data, isLoading, isError } = useGetDepartmentsByIdQuery(id);
+    const { data, isLoading, isError, refetch } = useGetDepartmentsByIdQuery(id);
     const department = data?.data ?? null; // safe extraction
 
     // Mutations
@@ -21,10 +21,16 @@ const DepartmentDetails = () => {
     // Local state for editing
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState("");
+    const [code, setCode] = useState("");
+    const [email, setEmail] = useState("");
 
-    // Set name when data loads
+    // Set fields when data loads
     useEffect(() => {
-        if (department) setName(department.dep01title);
+        if (department) {
+            setName(department.dep01title);
+            setCode(department.dep01code);
+            setEmail(department.dep01email);
+        }
     }, [department]);
 
     if (isLoading) return <div>Loading...</div>;
@@ -33,10 +39,17 @@ const DepartmentDetails = () => {
     // Edit
     const handleEdit = () => setIsEditing(true);
 
-    // Save updated name
+    // Save updated department
     const handleUpdate = async () => {
         try {
-            await updateDepartment({ id, data: { name } }).unwrap();
+            await updateDepartment({
+                id,
+                dep01title: name,
+                dep01code: code,
+                dep01email: email,
+            }).unwrap();
+
+            await refetch();
             setIsEditing(false);
         } catch (err) {
             console.error("Update failed:", err);
@@ -59,7 +72,9 @@ const DepartmentDetails = () => {
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
             <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
-                <h1 className="text-2xl font-bold mb-4 text-center">Department Details</h1>
+                <h1 className="text-2xl font-bold mb-4 text-center">
+                    Department Details
+                </h1>
 
                 <div className="space-y-3">
                     <p className="bg-gray-200 rounded p-2">
@@ -74,14 +89,36 @@ const DepartmentDetails = () => {
                             department.dep01title
                         )}
                     </p>
+
                     <p className="bg-gray-200 rounded p-2">
-                        <span className="font-semibold">ID:</span> {department.dep01uin}
+                        <span className="font-semibold">ID:</span>{" "}
+                        {department.dep01uin}
                     </p>
+
                     <p className="bg-gray-200 rounded p-2">
-                        <span className="font-semibold">Code:</span> {department.dep01code}
+                        <span className="font-semibold">Code:</span>{" "}
+                        {isEditing ? (
+                            <input
+                                value={code}
+                                onChange={(e) => setCode(e.target.value)}
+                                className="border px-2 py-1 rounded w-full"
+                            />
+                        ) : (
+                            department.dep01code
+                        )}
                     </p>
+
                     <p className="bg-gray-200 rounded p-2">
-                        <span className="font-semibold">Email:</span> {department.dep01email}
+                        <span className="font-semibold">Email:</span>{" "}
+                        {isEditing ? (
+                            <input
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="border px-2 py-1 rounded w-full"
+                            />
+                        ) : (
+                            department.dep01email
+                        )}
                     </p>
                 </div>
 
@@ -102,12 +139,15 @@ const DepartmentDetails = () => {
                         </button>
                     )}
 
-                    <button
-                        onClick={handleDelete}
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition"
-                    >
-                        Delete
-                    </button>
+                    {/* Only show Delete button if NOT editing */}
+                    {!isEditing && (
+                        <button
+                            onClick={handleDelete}
+                            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition"
+                        >
+                            Delete
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

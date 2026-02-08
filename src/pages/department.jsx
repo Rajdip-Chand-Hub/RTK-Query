@@ -44,7 +44,7 @@ const Department = () => {
             </button>
             <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left text-gray-700 border-3">
-                    <thead className="text-1xl uppercase bg-gray-200 border-3">
+                    <thead className="text-lg uppercase bg-gray-200 border-3">
                         <tr>
                             <th className="px-6 py-3 border-r-3">Department Name</th>
                             <th className="px-6 py-3 border-r-3">Code</th>

@@ -32,11 +32,12 @@ export const departmentApi = createApi({
         }),
         updateDepartment: builder.mutation({
             query: ({ id, ...data }) => ({
-                url: "",
+                url: `/departments/updateDepartment/${id}`,
                 method: "PUT",
                 body: data,
             }),
-            invalidatesTags: ["Department"],
+            invalidatesTags: (result, error, { id }) => [
+                { type: "Department", id: Number(id) }],
         }),
         deleteDepartment: builder.mutation({
             query: (id) => ({
@@ -46,13 +47,13 @@ export const departmentApi = createApi({
             invalidatesTags: ["Department"],
         }),
         getDepartmentsById: builder.query({
-            query:(id) => ({
-                url:`/departments/departmentDetails/${id}`,
-                providesTags: (result, error, id) => [{ type: "Department", id }],
+            query: (id) => ({
+                url: `/departments/departmentDetails/${id}`,
+                providesTags: (result, error, id) => [{ type: "Department", id: Number(id)}],
             }),
         })
     })
 })
 
-export const { useGetDepartmentsQuery, useAddDepartmentMutation, useUpdateDepartmentMutation, 
+export const { useGetDepartmentsQuery, useAddDepartmentMutation, useUpdateDepartmentMutation,
     useGetDepartmentsByIdQuery, useDeleteDepartmentMutation } = departmentApi;
