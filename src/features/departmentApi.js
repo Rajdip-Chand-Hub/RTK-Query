@@ -26,7 +26,7 @@ export const departmentApi = createApi({
             query: (data) => ({
                 url: "/departments/createDepartment",
                 method: "POST",
-                body: data,
+                body: {...data, dep01status: true},
             }),
             invalidatesTags: ["Department"],
         }),

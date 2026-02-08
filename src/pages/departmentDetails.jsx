@@ -23,6 +23,7 @@ const DepartmentDetails = () => {
     const [name, setName] = useState("");
     const [code, setCode] = useState("");
     const [email, setEmail] = useState("");
+    const [status, setStatus] = useState("");
 
     // Set fields when data loads
     useEffect(() => {
@@ -30,6 +31,7 @@ const DepartmentDetails = () => {
             setName(department.dep01title);
             setCode(department.dep01code);
             setEmail(department.dep01email);
+            setStatus(department.dep01status);
         }
     }, [department]);
 
@@ -47,6 +49,7 @@ const DepartmentDetails = () => {
                 dep01title: name,
                 dep01code: code,
                 dep01email: email,
+                dep01status: status,
             }).unwrap();
 
             await refetch();
@@ -120,6 +123,22 @@ const DepartmentDetails = () => {
                             department.dep01email
                         )}
                     </p>
+                    <p className="bg-gray-200 rounded p-2">
+                        <span className="font-semibold">Status:</span>{" "}
+                        {isEditing ? (
+                            <select
+                                value={status ? "true" : "false"} // store as string for select
+                                onChange={(e) => setStatus(e.target.value === "true")}
+                                className="border px-2 py-1 rounded w-full"
+                            >
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
+                        ) : (
+                            department.dep01status ? "Active" : "Inactive"
+                        )}
+                    </p>
+
                 </div>
 
                 <div className="mt-6 flex justify-center space-x-3">
